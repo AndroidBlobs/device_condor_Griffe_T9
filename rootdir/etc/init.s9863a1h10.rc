@@ -1,0 +1,69 @@
+#import /init.common.rc
+import /vendor/etc/init/hw/init.common.rc
+
+on init
+    # load acc mag sensor driver
+    #insmod /lib/modules/n2dm.ko
+    #insmod /lib/modules/ltr_558als.ko
+    #insmod /lib/modules/stk8baxx.ko
+    chown system input /sys/class/xr-gsensor/device/gsensor
+    chmod 660 /sys/class/xr-gsensor/device/gsensor
+    chown system input /sys/class/xr-gsensor/device/delay_acc
+    chmod 660 /sys/class/xr-gsensor/device/delay_acc
+    chown system input /sys/class/xr-pls/device/als
+    chmod 660 /sys/class/xr-pls/device/als
+    chown system input /sys/class/xr-pls/device/proximity
+    chmod 660 /sys/class/xr-pls/device/proximity
+    chown system input /sys/devices/virtual/mtk-tpd/device/proximity
+    chmod 660 /sys/devices/virtual/mtk-tpd/device/proximity
+    
+    chown system input /sys/class/xr-tp/device/tp_version
+    chown system system /sys/devices/platform/soc/soc:ap-apb/70800000.i2c/i2c-3/3-005d/gestureswitch
+    chmod 0666 /sys/devices/platform/soc/soc:ap-apb/70800000.i2c/i2c-3/3-005d/gestureswitch
+    chown system system /sys/devices/platform/soc/soc:ap-apb/70800000.i2c/i2c-3/3-0038/gestureswitch
+    chmod 0666 /sys/devices/platform/soc/soc:ap-apb/70800000.i2c/i2c-3/3-0038/gestureswitch
+
+on post-fs-data
+    setprop fpga.target.enable 1
+    setprop debug.delaytime.min 10
+    setprop debug.delaytime.mid 100
+    setprop debug.delaytime.max 1000
+    setprop debug.android_watchdog.disable 1
+
+#modify permission for voicetrigger dev
+    chown system  audio /dev/rt5512
+    chmod 660     /dev/rt5512
+
+#add for microarray fingerprint
+    chmod 660 /dev/madev0
+    mkdir /data/system/ma_fingerprint 0770 system system
+    chown system system /dev/madev0
+
+#add for fpsensor Fingerprint
+    chmod 660 /dev/fpsensor
+    chown system system /dev/fpsensor
+
+    mkdir /data/fpsensor
+    chown system system /data/fpsensor
+    chmod 660 /data/fpsensor/socket
+    chown system system /data/fpsensor/socket
+
+# add for fingerprint app function
+    mkdir /data/sprd 0770 system system
+    mkdir /data/sprd/launchappdata 0770 system system
+    mkdir /data/sprd/applock 0770 system system
+on boot
+    chown cameraserver system /sys/devices/virtual/misc/sprd_flash/test
+    chmod 660 /sys/devices/virtual/misc/sprd_flash/test
+
+# block I/O vm.dirty parameters
+    write /proc/sys/vm/dirty_background_bytes 4194304
+    write /proc/sys/vm/dirty_bytes  52428800
+
+on property:persist.sys.gesture=0
+    write /sys/devices/platform/soc/soc:ap-apb/70800000.i2c/i2c-3/3-0038/gestureswitch 0
+    write /sys/devices/platform/soc/soc:ap-apb/70800000.i2c/i2c-3/3-005d/gestureswitch 0
+
+on property:persist.sys.gesture=1
+    write /sys/devices/platform/soc/soc:ap-apb/70800000.i2c/i2c-3/3-0038/gestureswitch 1
+    write /sys/devices/platform/soc/soc:ap-apb/70800000.i2c/i2c-3/3-005d/gestureswitch 1

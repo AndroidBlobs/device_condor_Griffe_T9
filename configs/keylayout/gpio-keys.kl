@@ -1,0 +1,16 @@
+key 114     VOLUME_DOWN     WAKE
+key 115     VOLUME_UP       WAKE
+key 116     POWER           WAKE
+key 212     CAMERA          WAKE
+key 0x210   FOCUS           WAKE
+key 172     HOME           WAKE
+key 249   GESTURE_DC 
+key 250   GESTURE_CHAR 
+key 183   F13
+key 184   F14  
+key 185   F15  
+key 186   F16  
+key 187   F17  
+key 188   F18  
+key 189   F19  
+key 190   F20 
